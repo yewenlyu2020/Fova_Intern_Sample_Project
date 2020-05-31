@@ -1,6 +1,9 @@
 import torch
 import torch.nn as nn
 
+# This is an implementation of mobilenetv2 model on the CIFAR10 dataset by
+# https://github.com/huyvnphan/PyTorch_CIFAR10
+
 __all__ = ['MobileNetV2']
 
 
