@@ -5,6 +5,7 @@ import requests
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from PIL import Image
 from torchvision import models, transforms
 
@@ -20,7 +21,7 @@ def model_fn(model_dir):
 
     Args:
         model_dir (string): the absolute path of the directory holding the saved .pt
-        file of the loading model
+                            file of the loading model
 
     Rets:
         (DataParallel): the pretrained and loaded mobilenetv2 model
@@ -48,11 +49,11 @@ def model_fn(model_dir):
 def input_fn(request_body, request_content_type):
     """
     Deserializes JSON encoded data into a torch.Tensor
-    
+
     Args:
         request_body (buffer): a single json list compatible with the loaded model
-                               or a 
-        requested_content_type (string): specifies type input data
+                               or a PIL image object
+        requested_content_type (str): specifies input data type
 
     Rets:
         (Compose): A transformed tensor ready to be passed to predict_fn
@@ -88,7 +89,7 @@ def predict_fn(input_data, model):
     Args:
         input_data (Compose): a transformed tensor object from input_fn
         model (DataParallel): a pretrained and loaded mobilenetv2 model from model_fn
-    
+
     Rets:
         (Tensor): a torch.Tensor object containing the predition
     """
@@ -101,12 +102,33 @@ def predict_fn(input_data, model):
     with torch.no_grad():
         model.eval()
         output = model(input_data)
-        predictions = torch.exp(output)
-    
-    return predictions
+        prediction = torch.exp(output)
+
+    return prediction
 
 
-def output_fn(prediction_output, output_content_type):
+def output_fn(prediction, response_content_type='application/json'):
     """
-    
+    Serialize the prediction result into the desired response content type
+
+    Args:
+        prediction (Tensor): a torch.Tensor object representing the prediction from predict_fn
+        response_content_type (str): specifies desired output data
+
+    Rets:
+        (str): a json formatted string from the prediction tensor object
     """
+    logger.info('Serializing the output...')
+    classes = {0:'plane', 1:'car', 2:'bird', 3:'cat', 4:'deer', 5:'dog', 6:'frog', 7:'horse', 8:'ship', 9:'truck'}
+
+    topk, topclass = prediction.topk(3, dim=1)
+    result = []
+
+    for i in range(3):
+        pred = {'prediction': classes[topclass.cpu().numpy()[0][i]], 'score': f'{topk.cpu().numpy()[0][i] * 100}%'}
+        logger.info(f'Adding prediction: {pred}')
+        result.append(pred)
+
+    if response_content_type == 'application/json':
+        return json.dumps(result), response_content_type
+    raise Exception(f'Unsupported output type.')
