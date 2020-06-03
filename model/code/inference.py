@@ -4,10 +4,8 @@ import os
 import requests
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from PIL import Image
-from torchvision import models, transforms
+from torchvision import transforms
 
 from mobilenetv2_cifar10 import MobileNetV2
 
@@ -31,11 +29,11 @@ def model_fn(model_dir):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = MobileNetV2()
 
-    if torch.cuda.device_count() > 1:
-        logger.info("Gpu count: {}".format(torch.cuda.device_count()))
-        model = nn.DataParallel(model)
+    # if torch.cuda.device_count() > 1:
+    #     logger.info("Gpu count: {}".format(torch.cuda.device_count()))
+    #     model = nn.DataParallel(model)
 
-    logger.info('Current device: {}'.format(device))
+    # logger.info('Current device: {}'.format(device))
 
     with open(os.path.join(model_dir, 'mobilenet_v2.pt'), 'rb') as f:
         model.load_state_dict(torch.load(f))
@@ -62,7 +60,7 @@ def input_fn(request_body, request_content_type):
     if request_content_type == 'application/json':
         input_data = json.loads(request_body)
         url = input_data['url']
-        logger.info(f'Loading image: {url}')
+        logger.info('Loading image: %s', url)
         image_data = Image.open(requests.get(url, stream=True).raw)
 
     elif request_content_type == 'image/*':
@@ -126,9 +124,9 @@ def output_fn(prediction, response_content_type='application/json'):
 
     for i in range(3):
         pred = {'prediction': classes[topclass.cpu().numpy()[0][i]], 'score': f'{topk.cpu().numpy()[0][i] * 100}%'}
-        logger.info(f'Adding prediction: {pred}')
+        logger.info('Adding prediction: %s', pred)
         result.append(pred)
 
     if response_content_type == 'application/json':
         return json.dumps(result), response_content_type
-    raise Exception(f'Unsupported output type.')
+    raise Exception('Unsupported output type.')
