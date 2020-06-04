@@ -60,7 +60,7 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 		with open(os.path.join(model_dir, 'model.pt'), 'rb') as f:
 			model.load_state_dict(torch.load(f))
 	```
-#### To use the model directly via HTTP request
+#### To use the model directly via HTTP request (No prior steps needed)
 *Note:* It is only because of the same error described above, this approach does not work correctly yet.
 
 ![Post](docs/post.png)
