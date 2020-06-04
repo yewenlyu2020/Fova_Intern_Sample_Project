@@ -1,16 +1,16 @@
-## Inference of Mobilenetv2 Model on AWS SageMaker
+# Inference of Mobilenetv2 Model on AWS SageMaker
 This project is a deployed and pretrained Movilenetv2 model on CIFAR10, by huyvnphan on [https://github.com/huyvnphan/PyTorch_CIFAR10](https://github.com/huyvnphan/PyTorch_CIFAR10)
 and its hosted on AWS SageMaker and can be interacted via AWS API Gateway
 
 ![Endpoint](docs/sagemaker-endpoint-1.gif)
 
-### To use the deployed model
+## To use the deployed model
 Since the endpoints of the deployed models on AWS SageMaker are scoped to an individual account, and can not be made public, to use the deployed model, you can either:
 1. Create an endpoint on your account. OR
 2. Use HTTP request via AWS API Gateway and Lambda function implemented for a deployed endpoint.
 
 This model recieves a image URL and gives prediction in a form of probabilities of the top three categories that this model deems it belongs to.
-#### To use the model endpoint on your own account
+### To use the model endpoint on your own account
 1. Open the Amazon SageMaker console at [https://console.aws.amazon.com/sagemaker/](https://console.aws.amazon.com/sagemaker/).
 
 2. Create a notebook instance.
@@ -60,7 +60,7 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 		with open(os.path.join(model_dir, 'model.pt'), 'rb') as f:
 			model.load_state_dict(torch.load(f))
 	```
-#### To use the model directly via HTTP request (No prior steps needed)
+### To use the model directly via HTTP request (No prior steps needed)
 *Note:* It is only because of the same error described above, this approach does not work correctly yet.
 
 ![Post](docs/post.png)
