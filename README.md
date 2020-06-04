@@ -13,8 +13,8 @@ This model recieves a image URL and gives prediction in a form of probabilities 
 ### To use the model endpoint on your own account
 1. Open the Amazon SageMaker console at [https://console.aws.amazon.com/sagemaker/](https://console.aws.amazon.com/sagemaker/).
 
-2. Create a notebook instance.
-a. For **Instance Type** choose `ml.t2.medium`
+2. Create a notebook instance.<br/>
+a. For **Instance Type** choose `ml.t2.medium`<br/>
 b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 
 3. Upload `model/code/inference.py` in this repository to the notebook instance, create a `Deploy.ipynb` in the same directory.
@@ -31,8 +31,8 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 
 	predictor = pytorch_model.deploy(instance_type='ml.t2.medium', initial_instance_count=1)
 	```
-	*Note:*
-	a. This process will take about 15 mins.
+	*Note:*<br/>
+	a. This process will take about 15 mins.<br/>
 	b. Since this is a sample project, I set the read permission of the model file on S3 to public, so you can use it directly.
 	
 5. Get real time predictions by calling an inference endpoint and passing a request payload in JSON format.
