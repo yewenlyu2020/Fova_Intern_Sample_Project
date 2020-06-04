@@ -1,6 +1,6 @@
 # Inference of Mobilenetv2 Model on AWS SageMaker
-This project is a deployed and pretrained Movilenetv2 model on CIFAR10, by huyvnphan on [https://github.com/huyvnphan/PyTorch_CIFAR10](https://github.com/huyvnphan/PyTorch_CIFAR10)
-and its hosted on AWS SageMaker and can be interacted via AWS API Gateway
+This project is a deployed and pretrained Movilenetv2 model on CIFAR10, by huyvnphan on [https://github.com/huyvnphan/PyTorch_CIFAR10](https://github.com/huyvnphan/PyTorch_CIFAR10), 
+and is hosted on AWS SageMaker and can be interacted via AWS API Gateway
 
 ![Endpoint](docs/sagemaker-endpoint-1.gif)
 
