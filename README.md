@@ -36,8 +36,8 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 	a. This process will take about 15 mins.<br/>
 	b. Since this is a sample project, I set the read permission of the model file on S3 to public, so you can use it directly.
 	
-5. Get real time predictions by calling an inference endpoint and passing a request payload in JSON format.
-
+5. Get real time predictions by calling an inference endpoint and passing a request payload in JSON format.<br/>
+	***Please remember to change the EndpointName field.***
 	```python
 	import boto3
 	import json
