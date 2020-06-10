@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import requests
+import tarfile
 
 import torch
 import torch.nn as nn
@@ -9,6 +10,7 @@ from PIL import Image
 from torchvision import transforms
 
 # https://github.com/huyvnphan/PyTorch_CIFAR10
+
 
 class ConvBNReLU(nn.Sequential):
     def __init__(self, in_planes, out_planes, kernel_size=3, stride=1, groups=1):
@@ -139,13 +141,7 @@ def model_fn(model_dir):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = MobileNetV2()
 
-    # if torch.cuda.device_count() > 1:
-    #     logger.info("Gpu count: {}".format(torch.cuda.device_count()))
-    #     model = nn.DataParallel(model)
-
-    # logger.info('Current device: {}'.format(device))
-
-    with open(os.path.join(model_dir, 'model.pt'), 'rb') as f:
+    with open(os.path.join(model_dir, 'model/model.pt'), 'rb') as f:
         model.load_state_dict(torch.load(f))
     model.to(device).eval()
 
@@ -171,7 +167,8 @@ def input_fn(request_body, request_content_type):
         input_data = json.loads(request_body)
         url = input_data['url']
         logger.info('Loading image: %s', url)
-        image_data = Image.open(requests.get(url, stream=True).raw)
+        image_data = Image.open(requests.get(
+            url, stream=True).raw).convert('RGB')
 
     elif request_content_type == 'image/*':
         image_data = request_body
@@ -235,8 +232,8 @@ def output_fn(prediction, response_content_type='application/json'):
     result = []
 
     for i in range(3):
-        pred = {'prediction': classes[topclass.cpu().numpy(
-        )[0][i]], 'score': f'{topk.cpu().numpy()[0][i] * 100}%'}
+        pred = {'prediction': classes[topclass.cpu().numpy()[0][i]],
+                'score': "{:.0%}".format(topk.cpu().numpy()[0][i] * 100)}
         logger.info('Adding prediction: %s', pred)
         result.append(pred)
 
