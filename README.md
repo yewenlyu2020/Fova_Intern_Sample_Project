@@ -10,6 +10,7 @@ Since the endpoints of the deployed models on AWS SageMaker are scoped to an ind
 2. Use HTTP request via AWS API Gateway and Lambda function implemented for a deployed endpoint.
 
 This model recieves a image URL and gives prediction in a form of probabilities of the top three categories that this model deems it belongs to.
+
 ### To use the model endpoint on your own account
 1. Open the Amazon SageMaker console at [https://console.aws.amazon.com/sagemaker/](https://console.aws.amazon.com/sagemaker/).
 
@@ -37,7 +38,6 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 	
 5. Get real time predictions by calling an inference endpoint and passing a request payload in JSON format.
 
-	*Note:* To Jingzhao, here's the code that prompts me an error, :(
 	```python
 	import boto3
 	import json
@@ -50,16 +50,11 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 	response = runtime.invoke_endpoint(EndpointName='<CHANGE TO YOUR ENDPOINT NAME>',
 	                                   ContentType='application/json',
 	                                   Body=payload)
+
+	result = json.loads(response['Body'].read().decode())
+	print(result)
 	```
-	Which yields:
-    ![Error](docs/err.png)
-	The code directly related to this error is in `line 148, inference.py`:
-	```python
-	def model_fn(model_dir):
-		# ...
-		with open(os.path.join(model_dir, 'model.pt'), 'rb') as f:
-			model.load_state_dict(torch.load(f))
-	```
+
 ### To use the model directly via HTTP request (No prior steps needed)
 *Note:* It is only because of the same error described above, this approach does not work correctly yet.
 
@@ -69,9 +64,7 @@ In Postman, POST an HTTP request:
 
 In the request body,  input your data point
 `{"url":"<your image url>"}`
-Some example images:
-`https://blog.otoro.net/assets/20160406/png/frog/frog_5_thumb.png`
-`https://www.budgetchauffeurdrive.com.au/media/c5d7408b7b38bed081f4cd8178fe5996.png?preset=m-thumb`
+Sample image url:
 `https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2019/02/sample_image-1.png`
 
 The result will be returned in the response.

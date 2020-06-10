@@ -228,12 +228,12 @@ def output_fn(prediction, response_content_type='application/json'):
     classes = {0: 'plane', 1: 'car', 2: 'bird', 3: 'cat', 4: 'deer',
                5: 'dog', 6: 'frog', 7: 'horse', 8: 'ship', 9: 'truck'}
 
-    topk, topclass = prediction.topk(3, dim=1)
+    topk, topclass = prediction.topk(10, dim=1)
     result = []
 
-    for i in range(3):
+    for i in range(10):
         pred = {'prediction': classes[topclass.cpu().numpy()[0][i]],
-                'score': "{:.0%}".format(topk.cpu().numpy()[0][i] * 100)}
+                'score': "{:.2f}".format(topk.cpu().numpy()[0][i])}
         logger.info('Adding prediction: %s', pred)
         result.append(pred)
 
