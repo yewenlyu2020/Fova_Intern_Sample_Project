@@ -45,7 +45,7 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 	runtime = boto3.client('runtime.sagemaker')
 	
 	# pass a sample CIFAR10 image URL in json formatt to  
-	payload = json.dumps({'url':'https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2019/02/sample_image-1.png'})
+	payload = json.dumps({'url':'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRVTpWyHJ2HzwwqK8HELZqRzmLQykp4aVbMsTlkB2sPIGIC7dCU&usqp=CAU'})
 	
 	response = runtime.invoke_endpoint(EndpointName='<CHANGE TO YOUR ENDPOINT NAME>',
 	                                   ContentType='application/json',
@@ -56,7 +56,6 @@ b. For **IAM role**, choose **Create a new role**, then choose **Create role**.
 	```
 
 ### To use the model directly via HTTP request (No prior steps needed)
-*Note:* It is only because of the same error described above, this approach does not work correctly yet.
 
 ![Post](docs/post.png)
 In Postman, POST an HTTP request:
@@ -65,6 +64,6 @@ In Postman, POST an HTTP request:
 In the request body,  input your data point
 `{"url":"<your image url>"}`
 Sample image url:
-`https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2019/02/sample_image-1.png`
+`https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRVTpWyHJ2HzwwqK8HELZqRzmLQykp4aVbMsTlkB2sPIGIC7dCU&usqp=CAU`
 
 The result will be returned in the response.
